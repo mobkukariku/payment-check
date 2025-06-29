@@ -67,7 +67,7 @@ async def get_tips_paginated(user_id: int, page: int, limit: int):
             SELECT date, amount, workplace
             FROM tips
             WHERE user_id = :uid
-            ORDER BY date DESC
+            ORDER BY date ASC
             LIMIT :limit OFFSET :offset
         """), {"uid": user_id, "limit": limit + 1, "offset": offset})
         rows = result.fetchall()
@@ -82,7 +82,7 @@ async def get_paychecks_paginated(user_id: int, page: int, limit: int):
             SELECT date, amount, workplace
             FROM paychecks
             WHERE user_id = :uid
-            ORDER BY date DESC
+            ORDER BY date ASC
             LIMIT :limit OFFSET :offset
         """), {"uid": user_id, "limit": limit + 1, "offset": offset})
         rows = result.fetchall()
