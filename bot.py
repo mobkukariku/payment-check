@@ -224,7 +224,7 @@ async def all_paychecks(message: Message):
 @dp.callback_query(lambda c: c.data.startswith("tip_page:"))
 async def tip_pagination(callback: CallbackQuery):
     page = int(callback.data.split(":")[1])
-    tips, has_next = await get_tips_paginated(page, ITEMS_PER_PAGE)
+    tips, has_next = await get_tips_paginated(callback.from_user.id, page, ITEMS_PER_PAGE)
 
     text = "📋 <b>Список типсов</b>:\n\n" + "\n".join(
         [f"{idx+1}. {tip.date} — {tip.amount}$ — {tip.workplace}" for idx, tip in enumerate(tips)]
@@ -236,7 +236,7 @@ async def tip_pagination(callback: CallbackQuery):
 @dp.callback_query(lambda c: c.data.startswith("paycheck_page:"))
 async def paycheck_pagination(callback: CallbackQuery):
     page = int(callback.data.split(":")[1])
-    paychecks, has_next = await get_paychecks_paginated(page, ITEMS_PER_PAGE)
+    paychecks, has_next = await get_paychecks_paginated(callback.from_user.id ,page, ITEMS_PER_PAGE)
 
     text = "📋 <b>Список пейчеков</b>:\n\n" + "\n".join(
         [f"{idx+1}. {p.date} — {p.amount}$ — {p.workplace}" for idx, p in enumerate(paychecks)]
@@ -247,7 +247,7 @@ async def paycheck_pagination(callback: CallbackQuery):
 @dp.message(lambda msg: msg.text == "Все типсы")
 async def all_tips(message: types.Message):
     page = 1
-    tips, has_next = await get_tips_paginated(page=page, per_page=ITEMS_PER_PAGE)
+    tips, has_next = await get_tips_paginated(message.from_user.id , page=page, limit=ITEMS_PER_PAGE)
     text = "📋 <b>Типсы (стр. 1)</b>\n\n" + "\n".join([
         f"{t.date} - {t.amount} $ ({t.workplace})" for t in tips
     ])
@@ -257,7 +257,7 @@ async def all_tips(message: types.Message):
 @dp.message(lambda msg: msg.text == "Все пейчеки")
 async def all_paychecks(message: types.Message):
     page = 1
-    paychecks, has_next = await get_paychecks_paginated(page=page, per_page=ITEMS_PER_PAGE)
+    paychecks, has_next = await get_paychecks_paginated(message.from_user.id, page=page, limit=ITEMS_PER_PAGE)
     text = "📋 <b>Пейчеки (стр. 1)</b>\n\n" + "\n".join([
         f"{p.date} - {p.amount} $ ({p.workplace})" for p in paychecks
     ])
@@ -267,7 +267,7 @@ async def all_paychecks(message: types.Message):
 @dp.callback_query(lambda c: c.data.startswith("tips_page:"))
 async def tips_page_callback(callback: CallbackQuery):
     page = int(callback.data.split(":")[1])
-    tips, has_next = await get_tips_paginated(page=page, per_page=ITEMS_PER_PAGE)
+    tips, has_next = await get_tips_paginated(callback.from_user.id ,page=page, limit=ITEMS_PER_PAGE)
     text = f"📋 <b>Типсы (стр. {page})</b>\n\n" + "\n".join([
         f"{t.date} - {t.amount} $ ({t.workplace})" for t in tips
     ])
@@ -278,7 +278,7 @@ async def tips_page_callback(callback: CallbackQuery):
 @dp.callback_query(lambda c: c.data.startswith("paychecks_page:"))
 async def paychecks_page_callback(callback: CallbackQuery):
     page = int(callback.data.split(":")[1])
-    paychecks, has_next = await get_paychecks_paginated(page=page, per_page=ITEMS_PER_PAGE)
+    paychecks, has_next = await get_paychecks_paginated(callback.from_user.id ,page=page, limit=ITEMS_PER_PAGE)
     text = f"📋 <b>Пейчеки (стр. {page})</b>\n\n" + "\n".join([
         f"{p.date} - {p.amount} $ ({p.workplace})" for p in paychecks
     ])
