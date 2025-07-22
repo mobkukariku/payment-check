@@ -34,5 +34,8 @@ def workplace_keyboard():
 
 def back_keyboard():
     return ReplyKeyboardMarkup(
-        [KeyboardButton(text="<- Назад")],
+        keyboard=[
+            [KeyboardButton(text="<- Назад")],
+        ],
+        resize_keyboard=True
     )
