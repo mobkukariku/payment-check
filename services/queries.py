@@ -1,36 +1,6 @@
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker, declarative_base
-from sqlalchemy import Column, Integer, String, Float, text, select, BigInteger
-from config import DATABASE_URL
-
-engine = create_async_engine(DATABASE_URL, echo=True)
-async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
-Base = declarative_base()
-
-
-
-
-class Tip(Base):
-    __tablename__ = "tips"
-    id = Column(Integer, primary_key=True)
-    user_id = Column(BigInteger)  # Telegram user ID
-    date = Column(String)
-    amount = Column(Float)
-    workplace = Column(String)
-
-class Paycheck(Base):
-    __tablename__ = "paychecks"
-    id = Column(Integer, primary_key=True)
-    user_id = Column(BigInteger)
-    date = Column(String)
-    amount = Column(Float)
-    workplace = Column(String)
-
-async def init_db():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
-
+from services.database import async_session
+from models.models import Tip, Paycheck
+from sqlalchemy import text, select
 
 async def add_tip(user_id, date, amount, workplace):
     async with async_session() as session:
